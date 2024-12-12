@@ -69,7 +69,8 @@ with open(out_f,"w") as dest:
             count_hap_dict[snp_pos] = sum(list(hap_dict.values()))
 
 sorted_count_hap_dict = dict(sorted(count_hap_dict.items(), key=lambda item: item[1], reverse=True))
-bar_plot_dict = snp_hap_dict[list(sorted_count_hap_dict.keys())[0]]
+highest_count_snp = list(sorted_count_hap_dict.keys())[0]
+bar_plot_dict = snp_hap_dict[highest_count_snp]
 total_count = sorted_count_hap_dict[list(sorted_count_hap_dict.keys())[0]]
 sorted_bar_plot_dict = dict(sorted(bar_plot_dict.items(), key=lambda item: item[1], reverse=True))
 
@@ -101,6 +102,6 @@ p.add_tools(HoverTool(tooltips=[("start", "@starts"), ("end", "@ends"),("source"
 
 p.yaxis.axis_label="% of haplotypes"
 
-p.title = f"Total number of FL haps in IBD with RH haps on {out_f} at position {snp_pos}:{total_count} "
+p.title = f"Total number of FL haps in IBD with RH haps on {out_f} at position {highest_count_snp}:{total_count} "
 
 save(p)
