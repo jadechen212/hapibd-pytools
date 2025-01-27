@@ -39,34 +39,34 @@ def read_source_hap(hap_list):
                     hap_dict_list[2][line[0]] = ",".join(list(ss_hap_dict_sorted.keys())[:min_slice]) # this dict contains most important source haplo
     return hap_dict_list
 
-with open(out_f,"w") as dest:
-    with open(map_f) as source:
-        for line_f in source:
-            line_f = line_f.rstrip().split()
-            snp_pos = int(line_f[3])
-            snp_hap_dict[snp_pos]={}
-            header = True
-            with open(hap_info_f) as source1:
-                for line in source1:
-                    if header:
-                        header = False
-                    else:
-                        line = line.rstrip().split("\t")
-                        if int(line[1]) <= snp_pos and int(line[2]) >= snp_pos:
-                            pattern = re.compile(r"([A-Za-z0-9_-]+):([0-9]+)\-([0-9]+)")
-                            match = re.findall(pattern, line[3])
-                            sample_list = [i[0] for i in match]
-                            cord_list = [list(map(int, list(i[1:]))) for i in match]
-                            sample_cord_dict = dict(zip(sample_list, cord_list))
-                            for sample in sample_cord_dict:
-                                if sample_cord_dict[sample][0] <= snp_pos and sample_cord_dict[sample][1] >= snp_pos:
-                                    if line[0] not in snp_hap_dict[snp_pos]:
-                                        snp_hap_dict[snp_pos][line[0]] = 0
-                                    snp_hap_dict[snp_pos][line[0]] += 1
-                        elif int(line[1]) > snp_pos:
-                            break
-            hap_dict = snp_hap_dict[snp_pos]
-            count_hap_dict[snp_pos] = sum(list(hap_dict.values()))
+#with open(out_f,"w") as dest:
+with open(map_f) as source:
+    for line_f in source:
+        line_f = line_f.rstrip().split()
+        snp_pos = int(line_f[3])
+        snp_hap_dict[snp_pos]={}
+        header = True
+        with open(hap_info_f) as source1:
+            for line in source1:
+                if header:
+                    header = False
+                else:
+                    line = line.rstrip().split("\t")
+                    if int(line[1]) <= snp_pos and int(line[2]) >= snp_pos:
+                        pattern = re.compile(r"([A-Za-z0-9_-]+):([0-9]+)\-([0-9]+)")
+                        match = re.findall(pattern, line[3])
+                        sample_list = [i[0] for i in match]
+                        cord_list = [list(map(int, list(i[1:]))) for i in match]
+                        sample_cord_dict = dict(zip(sample_list, cord_list))
+                        for sample in sample_cord_dict:
+                            if sample_cord_dict[sample][0] <= snp_pos and sample_cord_dict[sample][1] >= snp_pos:
+                                if line[0] not in snp_hap_dict[snp_pos]:
+                                    snp_hap_dict[snp_pos][line[0]] = 0
+                                snp_hap_dict[snp_pos][line[0]] += 1
+                    elif int(line[1]) > snp_pos:
+                        break
+        hap_dict = snp_hap_dict[snp_pos]
+        count_hap_dict[snp_pos] = sum(list(hap_dict.values()))
 
 sorted_count_hap_dict = dict(sorted(count_hap_dict.items(), key=lambda item: item[1], reverse=True))
 highest_count_snp = list(sorted_count_hap_dict.keys())[0]
